@@ -1,7 +1,7 @@
 # dogebuild-tex
 
-![Travis (.org) branch](https://img.shields.io/travis/dogebuild/dogebuild-tex/master)
-![PyPI](https://img.shields.io/pypi/v/dogebuild-tex)
+[![Travis (.org) branch](https://img.shields.io/travis/dogebuild/dogebuild-tex/master)](https://travis-ci.com/dogebuild/dogebuild-tex)
+[![PyPI](https://img.shields.io/pypi/v/dogebuild-tex)](https://pypi.org/project/dogebuild-tex/)
 [![Documentation Status](https://readthedocs.org/projects/dogebuild-tex/badge/?version=latest)](https://dogebuild-tex.readthedocs.io/en/latest/?badge=latest)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 
