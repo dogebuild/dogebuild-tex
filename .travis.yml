@@ -22,7 +22,7 @@ jobs:
   include:
   - stage: test
   - stage: deploy
-    python: '3.7'  # 3.7 is installed in system so build will be faster
+    python: '3.9'
     script: skip
     before_deploy:
       - git config --local user.name "Bender Rodriguez"

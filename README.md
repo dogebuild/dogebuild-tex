@@ -1,5 +1,8 @@
 # dogebuild-tex
 
+[![Build Status](https://travis-ci.com/dogebuild/dogebuild-tex.svg?branch=master)](https://travis-ci.com/dogebuild/dogebuild-tex)
+[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
+
 Tex plugin for [dogebuild](https://github.com/dogebuild/dogebuild).
 
 ## Install
