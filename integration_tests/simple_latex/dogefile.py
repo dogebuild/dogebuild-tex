@@ -1,3 +1,3 @@
-from dogebuild_tex import Tex
+from dogebuild_tex import Tex, DockerTexBinary
 
-Tex()
+Tex(tex_binary=DockerTexBinary("vipintm/xelatex"))
