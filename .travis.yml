@@ -19,13 +19,26 @@ jobs:
   include:
   - stage: test
   - stage: deploy
-    python: '3.7'
+    python: '3.7'  # 3.7 is installed in system so build will be faster
     script: skip
+    before_deploy:
+      - git config --local user.name "Bender Rodriguez"
+      - git config --local user.email "ksbenderbot@ya.ru"
+      - git tag $(cat dogebuild_tex/dogebuild_tex.version) --force
     deploy:
-      provider: pypi
+    - provider: pypi
       username: '__token__'
       password:
-        secure: fill value with result of command: travis encrypt --pro
+        secure: "UPNiDpu7fcygDkHUHbE1eQSDLkS1OA44TMQkQIWIiOlwjK2572GvOpA2JR0B5ler94qIURFV8/MO0/yrdtvoMxcShQQhwVzn4JTlA2MwfRiVnNASA5edVZI+V3LlrSGJcR0kERso32nynYSvuGKQ0IQuZ0UdzKJnrCGV/QfmNSTIR8H8PLgnkfA6s9zIno14m5jtHWwH2KDABl6O4fuTO058su4ZQCA1V35yWgd9PnM7ddf9KzDM55rocsVyuZakcSOdK27VFGqu4P5xF7Hg63SWzQDAQPg+u02tWcdozg2NsezaR6InB6APkYY7s8S4DvK6Mz/iT7Wu9Fw8PUmc1mYB9XTab5YTIco86jJAX/dfFnX6y+JPq20b9iCaJsMn9lQFaeGhv7HwEZp8Y3+bA9xMQJrHt1bjIIv4MK/hr2VssqTki2l1T080NRxhpjesNbkKBG2pZCalhGySAj/ad+k1dnBdR34HQEJ/nxqOhUrB/LuOPoMpUWSKCkU00/SyMpI9i2HRtHhiwjTfxU+7sMnhvJ2UIjRDssiarl9qoS6a0wqNfhttLUAuosSxdR7f8ZuJEl85o49zxRjyzhGJ+rDrN5FsQegl10Q3MRPaSgHU52NSC+ZKnFQ9Wnwxy8o3zWJtgex4tk+OuBpRwEA+AvPyjTrrCZMFdBcrvCNbhE4="
       on:
         distributions: sdist bdist_wheel
-        repo: Fill repo name
+        repo: dogebuild/dogebuild-tex
+    - provider: releases
+      api_key:
+        secure: "CS1D6mvi8DDgSw815GJNACUDnBONwHATmWYo1yuISZEWKtHdkcct4Xyct7wvzJWLaUaA5vz9oV+RuIRS1rgDewFNohzr6vrUaaodZEaWwjhOXiGvKDNimju7x56IVFzo/3MmYcjTXO4GrCgrTSYQ8o8x57Z865tKgRtYTz8u/ZqNcJ/39OMi5BlL28KfOcuz4EJ5gxxTSzf/XDNKypBU/6mSDK7buAOzXg426MGBckUs3npCgEI2Jk/q0xzVx1EiPzf3njsujXh23mzlXauzZPHnuVly/HIvNNkunyHXNEuIOSt4CYMDtvFZKNlfvxLtuQ6AwilBNZ3k+4yt+3TlBBHuEEEBWZ4eFoYFL3PBbeTineqY7BdKr3csloibXXZHSNE2iFAsMcy52pYO2Al6nBT8/zy7H2ZuHieQvvdA902OERKq7ReyK6ngw08y6eFjnI8Tt+oaUSS8F0+hPVl3HFV580fNE9wsp3Y1wsDlzxScQIEtLqFB7ZwUVvWB2F9nvL0ZfzdTvJrCiV2L5dBow6tBLGOxZkezY72eLt8DqAFA+7lRTzCI0JNpLCXPFMPL4CGxXdy7StYecWh2T0QjLyfiKrlt5mUCR5UBzV2WcNzHJhasqs1dQBtbvYnTAogPUrcAoryzkNGgvCUxVBtvBb9sG3++nAJJiXW9qIg/2dc="
+      on:
+        repo: dogebuild/dogebuild-tex
+      skip_cleanup: true
+branches:
+  only:
+  - master
