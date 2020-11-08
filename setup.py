@@ -13,16 +13,22 @@ def load_from(file_name):
 setup(
     name="dogebuild-tex",
     version=load_from("dogebuild_tex/dogebuild_tex.version").strip(),
-    description="C language dogebuild plugin",
+    description="Tex dogebuild plugin",
     long_description=load_from("README.md"),
     long_description_content_type="text/markdown",
-    author="Fill author",
-    author_email="Fill email",
+    author="Kirill Sulim",
+    author_email="kirillsulim@gmail.com",
     license="mit",
-    url="Fill url",
-    packages=find_packages(include=["dogebuild*",]),
+    url="https://github.com/dogebuild/dogebuild-tex",
+    packages=find_packages(
+        include=[
+            "dogebuild*",
+        ]
+    ),
     test_suite="tests",
-    install_requires=["dogebuild",],
+    install_requires=[
+        "dogebuild",
+    ],
     classifiers=[
         "Development Status :: 2 - Pre-Alpha",
         "Environment :: Console",
@@ -32,5 +38,5 @@ setup(
         "Operating System :: OS Independent",
         "Topic :: Software Development",
     ],
-    keywords="dogebuild builder",
+    keywords="dogebuild builder tex latex",
 )
