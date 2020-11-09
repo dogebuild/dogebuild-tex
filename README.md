@@ -42,3 +42,9 @@ Tex(
 ```
 
 Dogebuild will call docker at the build process.
+
+## Documentation
+
+Advanced documentation for dogebuild available in [readthedocs](https://dogebuild.readthedocs.io).
+
+Advanced documentation for dogebuild-tex plugin available in [readthedocs](https://dogebuild-tex.readthedocs.io).
