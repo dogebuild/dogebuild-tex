@@ -1,5 +1,8 @@
 language: python
-dist: xenial
+os:
+  - linux
+  - osx
+  - windows
 sudo: true
 python:
 - '3.7'
@@ -17,7 +20,7 @@ script:
 stages:
 - test
 - name: deploy
-  if: branch = master
+  if: branch = master && os = linux
 jobs:
   include:
   - stage: test
