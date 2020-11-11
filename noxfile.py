@@ -24,7 +24,13 @@ FLAKE8_IGNORE = [
         "simple_latex",
     ],
 )
-@nox.parametrize("doge_version", ["0.3.2"])
+@nox.parametrize(
+    "doge_version",
+    [
+        "0.3.2",
+        "0.3.3",
+    ],
+)
 def tests(session, directory, doge_version):
 
     session.install(f"dogebuild=={doge_version}")

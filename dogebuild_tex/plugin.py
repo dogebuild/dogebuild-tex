@@ -1,5 +1,6 @@
-from os import getuid, getgid, getcwd
-from pathlib import Path
+import os
+import platform
+from pathlib import Path, PosixPath, WindowsPath
 from shutil import rmtree
 from subprocess import run
 from typing import List
@@ -8,7 +9,7 @@ from dogebuild.plugins import DogePlugin
 
 
 class TexBinary:
-    def get_pdf_command(self, *touched_directories: Path) -> List[str]:
+    def get_pdf_command(self, build_dir: Path, out_file_name: str, main_file: Path) -> List[str]:
         raise NotImplementedError()
 
 
@@ -16,8 +17,13 @@ class SystemTexBinary(TexBinary):
     def __init__(self, pdf_binary: str = "pdflatex"):
         self.pdf_binary = pdf_binary
 
-    def get_pdf_command(self, *touched_directories: Path) -> List[str]:
-        return [self.pdf_binary]
+    def get_pdf_command(self, build_dir: Path, out_file_name: str, main_file: Path) -> List[str]:
+        return [
+            self.pdf_binary,
+            f"-output-directory={build_dir}",
+            f"-jobname={out_file_name}",
+            main_file,
+        ]
 
 
 class DockerTexBinary(TexBinary):
@@ -26,19 +32,41 @@ class DockerTexBinary(TexBinary):
         self.version = version
         self.pdf_binary = pdf_binary
 
-    def get_pdf_command(self, *touched_directories: Path) -> List[str]:
-        command = ["docker", "run", "--rm", "--user", f"{getuid()}:{getgid()}"]
-        for d in touched_directories:
-            command.append("-v")
-            command.append(f"{d}:{d}")
-        command.append("-v")
-        command.append(f"{getcwd()}:{getcwd()}")
-        command.append("-w")
-        command.append(getcwd())
+    def get_pdf_command(self, build_dir: Path, out_file_name: str, main_file: Path) -> List[str]:
+        command = ["docker", "run", "--rm"]
+
+        system = platform.system()
+        if system != "Windows":
+            uid = os.getuid()
+            gid = os.getgid()
+            command.extend(["--user", f"{uid}:{gid}"])
+
+        command.extend(["-v", f"{self.to_docker_path_str(build_dir)}:{self.to_docker_path_str(build_dir)}"])
+
+        cwd = self.to_docker_path_str(Path(os.getcwd()))
+        command.extend(["-v", f"{cwd}:{cwd}"])
+        command.extend(["-w", cwd])
+
         command.append(f"{self.image}:{self.version}")
         command.append(self.pdf_binary)
 
+        command.append(f"-output-directory={self.to_docker_path_str(build_dir)}")
+        command.append(f"-jobname={out_file_name}")
+        command.append(self.to_docker_path_str(main_file))
+
         return command
+
+    @staticmethod
+    def to_docker_path_str(path: Path):
+        if isinstance(path, WindowsPath):
+            drive = path.parts[0]
+            rest = path.parts[1:]
+            drive_letters = drive[: -len(":\\")].lower()
+            return f"/{drive_letters}/" + "/".join(rest)
+        elif isinstance(path, PosixPath):
+            return str(path)
+        else:
+            raise NotImplementedError(f"Not implemented for {path.__class__.__name__}")
 
 
 class Tex(DogePlugin):
@@ -64,14 +92,8 @@ class Tex(DogePlugin):
         self.build_dir.mkdir(exist_ok=True, parents=True)
         out_file = (self.build_dir / self.out_file_name).with_suffix(".pdf")
 
-        result = run(
-            [
-                *self.tex_binary.get_pdf_command(self.build_dir),
-                f"-output-directory={self.build_dir}",
-                f"-jobname={self.out_file_name}",
-                self.main_file,
-            ]
-        )
+        command = self.tex_binary.get_pdf_command(self.build_dir, self.out_file_name, self.main_file)
+        result = run(command)
 
         return result.returncode, {"pdf": [out_file]}
 
