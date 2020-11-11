@@ -25,6 +25,12 @@ setup(
             "dogebuild*",
         ]
     ),
+    package_data={
+        "dogebuild_tex": [
+            "*.version",
+        ]
+    },
+    include_package_data=True,
     test_suite="tests",
     install_requires=[
         "dogebuild",
