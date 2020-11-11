@@ -8,18 +8,34 @@ python:
 services:
   - docker
 install:
-- python setup.py install
+- python3 setup.py install || python setup.py install
 - docker pull vipintm/xelatex
 before_script:
 - pip install nox
 script:
 - nox
 stages:
+- prepare
 - test
 - name: deploy
   if: branch = master
 jobs:
   include:
+  - stage: prepare
+    os: linux
+  - stage: prepare
+    os: osx
+    osx_image: xcode11.2
+    language: shell
+    python: 3.8
+  - stage: prepare
+    os: windows
+    language: shell
+    python: 3.8
+    before_install:
+    - choco install python --version 3.8.0
+    - python -m pip install --upgrade pip
+    env: PATH=/c/Python38:/c/Python38/Scripts:$PATH
   - stage: test
   - stage: deploy
     python: '3.9'
