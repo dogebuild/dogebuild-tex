@@ -26,7 +26,9 @@ setup(
         ]
     ),
     package_data={
-        "": ["*.version",]
+        "": [
+            "*.version",
+        ]
     },
     test_suite="tests",
     install_requires=[
